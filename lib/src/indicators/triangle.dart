@@ -24,7 +24,8 @@ class _TrianglePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    late var startingFillPosition = (size.width * 1.8) / 10.0;
+    final gap = 10.0;
+    late var startingFillPosition = (size.width * 1.8) / gap;
     var startAngle = _math.pi / 2.6;
     final selectedValue = value;
 
@@ -36,9 +37,9 @@ class _TrianglePainter extends CustomPainter {
     final bgColor = value != 0 ? lightColor : softColor;
     canvas.drawArc(
       Rect.fromCenter(
-        center: Offset(size.width / 2, 10),
-        width: (startingFillPosition) * (10 - 0),
-        height: ((startingFillPosition) * (10 - 0)),
+        center: Offset(size.width / 2, gap),
+        width: (startingFillPosition) * (gap - 0),
+        height: ((startingFillPosition) * (gap - 0)),
       ),
       startAngle,
       endAngle,
@@ -53,16 +54,16 @@ class _TrianglePainter extends CustomPainter {
     for (var j = 0; j < 11; j++) {
       canvas.drawArc(
         Rect.fromCenter(
-          center: Offset(size.width / 2, 10),
-          width: (startingFillPosition) * (10 - j),
-          height: ((startingFillPosition) * (10 - j)),
+          center: Offset(size.width / 2, gap),
+          width: (startingFillPosition) * (gap - j),
+          height: ((startingFillPosition) * (gap - j)),
         ),
         startAngle,
         endAngle,
         true,
         Paint()
-          ..color = j >= (10 - selectedValue) ? fillColor : Colors.white
-          ..style = j >= (10 - selectedValue)
+          ..color = j >= (gap - selectedValue) ? fillColor : Colors.white
+          ..style = j >= (gap - selectedValue)
               ? PaintingStyle.fill
               : PaintingStyle.stroke
           ..strokeWidth = 0.4,
@@ -71,15 +72,15 @@ class _TrianglePainter extends CustomPainter {
     for (var j = 0; j < 11; j++) {
       canvas.drawArc(
         Rect.fromCenter(
-          center: Offset(size.width / 2, 10),
-          width: (startingFillPosition) * (10 - j),
-          height: ((startingFillPosition) * (10 - j)),
+          center: Offset(size.width / 2, gap),
+          width: (startingFillPosition) * (gap - j),
+          height: ((startingFillPosition) * (gap - j)),
         ),
         startAngle,
         endAngle,
         true,
         Paint()
-          ..color = j == (10 - selectedValue) ? fillColor : Colors.white
+          ..color = j == (gap - selectedValue) ? fillColor : Colors.white
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.4,
       );
@@ -88,9 +89,9 @@ class _TrianglePainter extends CustomPainter {
     /// Paint outside slice
     canvas.drawArc(
       Rect.fromCenter(
-        center: Offset(size.width / 2, 10),
-        width: (startingFillPosition) * (10 - 0),
-        height: ((startingFillPosition) * (10 - 0)),
+        center: Offset(size.width / 2, gap),
+        width: (startingFillPosition) * (gap - 0),
+        height: ((startingFillPosition) * (gap - 0)),
       ),
       startAngle,
       endAngle,
