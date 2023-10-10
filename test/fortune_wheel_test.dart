@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:flutter_fortune_wheel/flutter_pie_wheel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_helpers.dart';
@@ -24,7 +24,7 @@ void main() {
 
           await pumpFortuneWidget(
             tester,
-            FortuneWheel(
+            PieSelector(
               animateFirst: false,
               selected: Stream.empty(),
               onAnimationStart: onStart,
@@ -56,7 +56,7 @@ void main() {
 
           await pumpFortuneWidget(
             tester,
-            FortuneWheel(
+            PieSelector(
               animateFirst: true,
               selected: Stream.empty(),
               onAnimationStart: onStart,
@@ -92,7 +92,7 @@ void main() {
 
           await pumpFortuneWidget(
             tester,
-            FortuneWheel(
+            PieSelector(
               animateFirst: false,
               selected: controller.stream,
               items: testItems,

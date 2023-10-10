@@ -48,7 +48,7 @@ double _getAngle(Alignment alignment) {
 }
 
 class _WheelIndicator extends StatelessWidget {
-  final FortuneIndicator indicator;
+  final PieIndicator indicator;
 
   const _WheelIndicator({
     Key? key,

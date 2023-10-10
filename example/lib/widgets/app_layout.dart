@@ -16,21 +16,15 @@ class AppLayout extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text('Fortune Wheel Demo'),
+        title: Text('Pie Wheel Demo'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex:
-            GoRouterState.of(context).name == FortuneWheelPage.kRouteName
-                ? 0
-                : 1,
+            GoRouterState.of(context).name == PieWheelPage.kRouteName ? 0 : 1,
         onTap: (index) {
           switch (index) {
             case 0:
-              FortuneWheelPage.go(context);
-              break;
-
-            case 1:
-              FortuneBarPage.go(context);
+              PieWheelPage.go(context);
               break;
           }
         },

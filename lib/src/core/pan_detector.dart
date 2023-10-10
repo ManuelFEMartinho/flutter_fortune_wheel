@@ -107,7 +107,7 @@ abstract class PanPhysics extends ValueNotifier<PanState> {
   /// See also:
   ///  * [GestureDetector.onPanUpdate], which this method is passed to
   /// {@endtemplate}
-  void handlePanUpdate(DragUpdateDetails details);
+  void handlePanUpdate(DragUpdateDetails details, BuildContext? context);
 
   /// {@template flutter_fortune_wheel.PanPhysics.handlePanEnd}
   /// Is called when the end of a pan gesture is detected.
@@ -135,7 +135,7 @@ class NoPanPhysics extends PanPhysics {
 
   /// {@macro flutter_fortune_wheel.PanPhysics.handlePanEnd}
   @override
-  void handlePanUpdate(DragUpdateDetails details) {}
+  void handlePanUpdate(DragUpdateDetails details, BuildContext? context) {}
 }
 
 /// Calculates panned distances by assuming a circular shape.
@@ -172,7 +172,7 @@ class CircularPanPhysics extends PanPhysics {
   }
 
   /// {@macro flutter_fortune_wheel.PanPhysics.handlePanUpdate}
-  void handlePanUpdate(DragUpdateDetails details) {
+  void handlePanUpdate(DragUpdateDetails details, BuildContext? context) {
     final center = Offset(
       size.width / 2,
       _math.min(size.width, size.height) / 2,
@@ -209,7 +209,7 @@ class CircularPanPhysics extends PanPhysics {
         details.velocity.pixelsPerSecond.distance.abs() > 300) {
       value = value.copyWith(isPanning: false, wasFlung: true);
     } else {
-      value = value.copyWith(isPanning: false);
+      value = value.copyWith(isPanning: false, wasFlung: true);
     }
   }
 }
@@ -263,7 +263,7 @@ class DirectionalPanPhysics extends PanPhysics {
   }
 
   /// {@macro flutter_fortune_wheel.PanPhysics.handlePanUpdate}
-  void handlePanUpdate(DragUpdateDetails details) {
+  void handlePanUpdate(DragUpdateDetails details, BuildContext? context) {
     final currentPosition = _getOffset(details.globalPosition);
     final distance = currentPosition - _startPosition;
     value = value.copyWith(distance: distance);
@@ -321,7 +321,7 @@ class PanAwareBuilder extends HookWidget {
       curve: physics.curve,
     );
 
-    useValueChanged(panState.isPanning, (bool oldValue, Future<void>? _) async {
+    useValueChanged(panState.isPanning, (bool oldValue, _) async {
       if (!oldValue) {
         returnAnimCtrl.reset();
       } else {
@@ -329,7 +329,7 @@ class PanAwareBuilder extends HookWidget {
       }
     });
 
-    useValueChanged(panState.wasFlung, (bool oldValue, Future<void>? _) async {
+    useValueChanged(panState.wasFlung, (oldValue, _) async {
       if (panState.wasFlung) {
         await Future.microtask(() => onFling?.call());
       }
@@ -341,7 +341,7 @@ class PanAwareBuilder extends HookWidget {
       return GestureDetector(
         behavior: behavior,
         onPanStart: physics.handlePanStart,
-        onPanUpdate: physics.handlePanUpdate,
+        onPanUpdate: (d) => physics.handlePanUpdate(d, context),
         onPanEnd: physics.handlePanEnd,
         child: AnimatedBuilder(
             animation: returnAnim,

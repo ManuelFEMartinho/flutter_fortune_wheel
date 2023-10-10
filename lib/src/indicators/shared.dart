@@ -1,11 +1,11 @@
 part of 'indicators.dart';
 
 @immutable
-class FortuneIndicator {
+class PieIndicator {
   final Alignment alignment;
   final Widget child;
 
-  const FortuneIndicator({
+  const PieIndicator({
     this.alignment = Alignment.center,
     required this.child,
   });
@@ -15,7 +15,7 @@ class FortuneIndicator {
 
   @override
   bool operator ==(Object other) {
-    return other is FortuneIndicator &&
+    return other is PieIndicator &&
         alignment == other.alignment &&
         child == other.child;
   }

@@ -84,15 +84,14 @@ class _WheelData {
 /// ![](https://raw.githubusercontent.com/kevlatus/flutter_fortune_wheel/main/images/img-wheel-256.png?sanitize=true)
 ///
 /// See also:
-///  * [FortuneBar], which provides an alternative visualization
-///  * [FortuneWidget()], which automatically chooses a fitting widget
-///  * [Fortune.randomItem], which helps selecting random items from a list
-///  * [Fortune.randomDuration], which helps choosing a random duration
-class FortuneWheel extends HookWidget implements FortuneWidget {
-  /// The default value for [indicators] on a [FortuneWheel].
+///  * [PieWidget()], which automatically chooses a fitting widget
+///  * [Pie.randomItem], which helps selecting random items from a list
+///  * [Pie.randomDuration], which helps choosing a random duration
+class PieSelector extends HookWidget implements PieWidget {
+  /// The default value for [indicators] on a [PieSelector].
   /// Currently uses a single [TriangleIndicator] on [Alignment.topCenter].
-  static const List<FortuneIndicator> kDefaultIndicators = <FortuneIndicator>[
-    FortuneIndicator(
+  static const List<PieIndicator> kDefaultIndicators = <PieIndicator>[
+    PieIndicator(
       alignment: Alignment.topCenter,
       child: TriangleIndicator(),
     ),
@@ -100,40 +99,40 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
 
   static const StyleStrategy kDefaultStyleStrategy = AlternatingStyleStrategy();
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.items}
-  final List<FortuneItem> items;
+  /// {@macro flutter_fortune_wheel.PieWidget.items}
+  final List<PieItem> items;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.selected}
+  /// {@macro flutter_fortune_wheel.PieWidget.selected}
   final Stream<int> selected;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.rotationCount}
+  /// {@macro flutter_fortune_wheel.PieWidget.rotationCount}
   final int rotationCount;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.duration}
+  /// {@macro flutter_fortune_wheel.PieWidget.duration}
   final Duration duration;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.indicators}
-  final List<FortuneIndicator> indicators;
+  /// {@macro flutter_fortune_wheel.PieWidget.indicators}
+  final List<PieIndicator> indicators;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.animationType}
+  /// {@macro flutter_fortune_wheel.PieWidget.animationType}
   final Curve curve;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.onAnimationStart}
+  /// {@macro flutter_fortune_wheel.PieWidget.onAnimationStart}
   final VoidCallback? onAnimationStart;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.onAnimationEnd}
+  /// {@macro flutter_fortune_wheel.PieWidget.onAnimationEnd}
   final VoidCallback? onAnimationEnd;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.styleStrategy}
+  /// {@macro flutter_fortune_wheel.PieWidget.styleStrategy}
   final StyleStrategy styleStrategy;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.animateFirst}
+  /// {@macro flutter_fortune_wheel.PieWidget.animateFirst}
   final bool animateFirst;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.physics}
+  /// {@macro flutter_fortune_wheel.PieWidget.physics}
   final PanPhysics physics;
 
-  /// {@macro flutter_fortune_wheel.FortuneWidget.onFling}
+  /// {@macro flutter_fortune_wheel.PieWidget.onFling}
   final VoidCallback? onFling;
 
   /// The position to which the wheel aligns the selected value.
@@ -150,26 +149,29 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
   /// a section border is crossed.
   final ValueChanged<int>? onFocusItemChanged;
 
+  final SliceBuider? sliceBuider;
+
+  final IndicatorBuider? indicatorBuider;
+
   double _getAngle(double progress) {
     return 2 * _math.pi * rotationCount * progress;
   }
 
-  /// {@template flutter_fortune_wheel.FortuneWheel}
-  /// Creates a new [FortuneWheel] with the given [items], which is centered
+  /// {@template flutter_fortune_wheel.PieWheel}
+  /// Creates a new [PieWheel] with the given [items], which is centered
   /// on the [selected] value.
   ///
-  /// {@macro flutter_fortune_wheel.FortuneWidget.ctorArgs}.
+  /// {@macro flutter_fortune_wheel.PieWidget.ctorArgs}.
   ///
-  /// See also:
-  ///  * [FortuneBar], which provides an alternative visualization.
+
   /// {@endtemplate}
-  FortuneWheel({
+  PieSelector({
     Key? key,
     required this.items,
-    this.rotationCount = FortuneWidget.kDefaultRotationCount,
+    this.rotationCount = PieWidget.kDefaultRotationCount,
     this.selected = const Stream<int>.empty(),
-    this.duration = FortuneWidget.kDefaultDuration,
-    this.curve = FortuneCurve.spin,
+    this.duration = PieWidget.kDefaultDuration,
+    this.curve = PieCurve.spin,
     this.indicators = kDefaultIndicators,
     this.styleStrategy = kDefaultStyleStrategy,
     this.animateFirst = true,
@@ -180,6 +182,8 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     PanPhysics? physics,
     this.onFling,
     this.onFocusItemChanged,
+    this.sliceBuider,
+    this.indicatorBuider,
   })  : physics = physics ?? CircularPanPhysics(),
         assert(items.length > 1),
         super(key: key);
@@ -191,6 +195,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     Future<void> animate() async {
       if (rotateAnimCtrl.isAnimating) {
         return;
+        // rotateAnimCtrl.stop();
       }
 
       await Future.microtask(() => onAnimationStart?.call());
@@ -208,7 +213,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     useEffect(() {
       final subscription = selected.listen((event) {
         selectedIndex.value = event;
-        animate();
+        //animate();
       });
       return subscription.cancel;
     }, []);
@@ -252,14 +257,18 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                     items.length,
                     hapticImpact,
                   );
+                  final angleDegrees = (totalAngle * 180 / _math.pi).abs() +
+                      (360 / items.length) / 2;
+                  final rad = angleDegrees;
                   if (focusedIndex != null) {
                     onFocusItemChanged?.call(focusedIndex % items.length);
                   }
 
                   final transformedItems = [
                     for (var i = 0; i < items.length; i++)
-                      TransformedFortuneItem(
+                      TransformedPieItem(
                         item: items[i],
+                        totalAngle: rad,
                         angle: totalAngle +
                             alignmentOffset +
                             _calculateSliceAngle(i, items.length),
@@ -272,15 +281,38 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                       items: transformedItems,
                       wheelData: wheelData,
                       styleStrategy: styleStrategy,
+                      sliceBuider: sliceBuider,
+                      selectedItemIndex: selectedIndex.value,
                     ),
                   );
                 });
               },
             ),
-            for (var it in indicators)
-              IgnorePointer(
-                child: _WheelIndicator(indicator: it),
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final wheelData = _WheelData(
+                  constraints: constraints,
+                  itemCount: items.length,
+                  textDirection: Directionality.of(context),
+                );
+
+                final p = _math.pi * constraints.maxWidth;
+                return IgnorePointer(
+                  ignoring: true,
+                  child: _WheelIndicator(
+                    indicator: indicatorBuider?.call(context, -1, wheelData) ??
+                        PieIndicator(
+                          alignment: Alignment.topCenter,
+                          child: TriangleIndicator(
+                            height: wheelData.radius - 30,
+                            width: p / items.length - 30,
+                            valueText: items[0].child.toString(),
+                          ),
+                        ),
+                  ),
+                );
+              },
+            ),
           ],
         );
       },
@@ -296,7 +328,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
     final step = 360 / itemsNumber;
     final angleDegrees = (angle * 180 / _math.pi).abs() + step / 2;
     if (lastVibratedAngle.value ~/ step == angleDegrees ~/ step) {
-      return null;
+      return 0;
     }
     final index = angleDegrees ~/ step * angle.sign.toInt() * -1;
     final hapticFeedbackFunction;

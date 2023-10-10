@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:flutter_fortune_wheel/flutter_pie_wheel.dart';
 
 import 'common/common.dart';
 import 'router.dart';
@@ -13,7 +13,7 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fortune Wheel Example',
+      title: 'Pie Wheel Example',
       home: ExamplePage(),
     );
   }
@@ -48,23 +48,32 @@ class _ExamplePageState extends State<ExamplePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Fortune Wheel'),
+        title: Text('Flutter Pie Wheel'),
       ),
       body: GestureDetector(
         onTap: () {
           setState(() {
-            selected.add(
-              Fortune.randomInt(0, items.length),
-            );
+            selected.add(2);
           });
         },
         child: Column(
           children: [
             Expanded(
-              child: FortuneWheel(
+              child: PieSelector(
+                hapticImpact: HapticImpact.heavy,
+                physics: DirectionalPanPhysics.horizontal(),
                 selected: selected.stream,
+                onAnimationEnd: () {
+                  print('End');
+                },
                 items: [
-                  for (var it in items) FortuneItem(child: Text(it)),
+                  for (var it in items)
+                    TransformedPieItem(
+                      offset: Offset(0, 50),
+                      item: PieItem(
+                        child: Text('$it lhio ${items.indexOf(it)}'),
+                      ),
+                    )
                 ],
               ),
             ),
@@ -91,7 +100,7 @@ class _DemoAppState extends State<DemoApp> {
     return ThemeModeScope(
       builder: (context, themeMode) {
         return MaterialApp.router(
-          title: 'Fortune Wheel Demo',
+          title: 'Pie Wheel Demo',
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeMode,

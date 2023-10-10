@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:quiver/core.dart';
 
-import '../bar/bar.dart';
-import '../indicators/indicators.dart';
-import '../wheel/wheel.dart';
+import '../../flutter_pie_wheel.dart';
 
 part 'animations.dart';
 
-part 'fortune_item.dart';
+part 'pie_item.dart';
 
-part 'fortune_widget.dart';
+part 'pie_widget.dart';
 
 part 'gestures.dart';
 

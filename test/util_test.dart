@@ -1,10 +1,9 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:flutter_fortune_wheel/flutter_pie_wheel.dart';
 import 'package:flutter_fortune_wheel/src/util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,14 +14,14 @@ void repeatFor(VoidCallback func, [int iterations = 1000]) {
 }
 
 void tick(Duration duration) {
-  SchedulerBinding.instance!.handleBeginFrame(duration);
-  SchedulerBinding.instance!.handleDrawFrame();
+  SchedulerBinding.instance.handleBeginFrame(duration);
+  SchedulerBinding.instance.handleDrawFrame();
 }
 
 void main() {
   setUp(() {
     WidgetsFlutterBinding.ensureInitialized();
-    WidgetsBinding.instance!.resetEpoch();
+    WidgetsBinding.instance.resetEpoch();
     ui.window.onBeginFrame = null;
     ui.window.onDrawFrame = null;
   });

@@ -6,11 +6,7 @@ final router = GoRouter(
   routes: [
     GoRoute(
         path: '/',
-        builder: (context, state) => FortuneWheelPage(),
-        name: FortuneWheelPage.kRouteName),
-    GoRoute(
-        path: '/bar',
-        builder: (context, state) => FortuneBarPage(),
-        name: FortuneBarPage.kRouteName),
+        builder: (context, state) => PieWheelPage(),
+        name: PieWheelPage.kRouteName),
   ],
 );

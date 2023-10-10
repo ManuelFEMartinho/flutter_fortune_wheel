@@ -1,13 +1,13 @@
 part of 'core.dart';
 
-/// A [FortuneItem] represents a value, which is chosen during a selection
-/// process and displayed within a [FortuneWidget].
+/// A [PieItem] represents a value, which is chosen during a selection
+/// process and displayed within a [PieWidget].
 ///
 /// See also:
-///  * [FortuneWidget]
+///  * [PieWidget]
 @immutable
-class FortuneItem implements GestureHandler {
-  final FortuneItemStyle? style;
+class PieItem implements GestureHandler {
+  final PieItemStyle? style;
 
   /// A widget to be rendered within this item.
   final Widget child;
@@ -150,7 +150,7 @@ class FortuneItem implements GestureHandler {
   @override
   final GestureDragUpdateCallback? onVerticalDragUpdate;
 
-  const FortuneItem({
+  const PieItem({
     this.style,
     required this.child,
     this.onTap,
@@ -206,25 +206,27 @@ class FortuneItem implements GestureHandler {
 
   @override
   bool operator ==(Object other) {
-    return other is FortuneItem && style == other.style && child == other.child;
+    return other is PieItem && style == other.style && child == other.child;
   }
 }
 
 @immutable
-class TransformedFortuneItem implements FortuneItem {
-  final FortuneItem _item;
+class TransformedPieItem implements PieItem {
+  final PieItem _item;
   final double angle;
   final Offset offset;
+  final double totalAngle;
 
-  const TransformedFortuneItem({
-    required FortuneItem item,
+  const TransformedPieItem({
+    required PieItem item,
     this.angle = 0.0,
     this.offset = Offset.zero,
+    this.totalAngle = 0.0,
   }) : _item = item;
 
   Widget get child => _item.child;
 
-  FortuneItemStyle? get style => _item.style;
+  PieItemStyle? get style => _item.style;
 
   @override
   GestureTapCallback? get onDoubleTap => _item.onDoubleTap;

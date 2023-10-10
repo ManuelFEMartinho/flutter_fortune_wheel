@@ -1,10 +1,18 @@
 part of 'wheel.dart';
 
+typedef SliceBuider = CircleSlice Function(
+    BuildContext context, int index, _WheelData wheelData, double totalAngle);
+typedef IndicatorBuider = PieIndicator Function(
+    BuildContext context, int index, _WheelData wheelData);
+
 class _TransformedCircleSlice extends StatelessWidget {
-  final TransformedFortuneItem item;
+  final TransformedPieItem item;
   final StyleStrategy styleStrategy;
   final _WheelData wheelData;
   final int index;
+  final SliceBuider? sliceBuider;
+  final int itemCount;
+  final int selectedItemIndex;
 
   const _TransformedCircleSlice({
     Key? key,
@@ -12,6 +20,9 @@ class _TransformedCircleSlice extends StatelessWidget {
     required this.styleStrategy,
     required this.index,
     required this.wheelData,
+    required this.itemCount,
+    required this.selectedItemIndex,
+    this.sliceBuider,
   }) : super(key: key);
 
   @override
@@ -27,27 +38,35 @@ class _TransformedCircleSlice extends StatelessWidget {
         style: style.textStyle,
         child: item.child,
       ),
-      slice: _CircleSlice(
-        radius: wheelData.radius,
-        angle: wheelData.itemAngle,
-        fillColor: style.color,
-        strokeColor: style.borderColor,
-        strokeWidth: style.borderWidth,
-      ),
+      slice: sliceBuider?.call(context, index, wheelData, item.totalAngle) ??
+          CircleSlice(
+            radius: wheelData.radius,
+            angle: wheelData.itemAngle,
+            fillColor: style.color,
+            strokeColor: style.borderColor,
+            strokeWidth: style.borderWidth,
+            itemIndex: 0,
+            itemCount: itemCount,
+            selectedItemIndex: selectedItemIndex,
+          ),
     );
   }
 }
 
 class _CircleSlices extends StatelessWidget {
-  final List<TransformedFortuneItem> items;
+  final List<TransformedPieItem> items;
   final StyleStrategy styleStrategy;
   final _WheelData wheelData;
+  final SliceBuider? sliceBuider;
+  final int selectedItemIndex;
 
   const _CircleSlices({
     Key? key,
     required this.items,
     required this.styleStrategy,
     required this.wheelData,
+    this.sliceBuider,
+    required this.selectedItemIndex,
   }) : super(key: key);
 
   @override
@@ -64,6 +83,9 @@ class _CircleSlices extends StatelessWidget {
               styleStrategy: styleStrategy,
               index: i,
               wheelData: wheelData,
+              sliceBuider: sliceBuider,
+              itemCount: items.length,
+              selectedItemIndex: selectedItemIndex,
             ),
           ),
         ),

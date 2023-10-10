@@ -1,6 +1,6 @@
 part of 'wheel.dart';
 
-class _CircleSlice extends StatelessWidget {
+class CircleSlice extends StatelessWidget {
   static Path buildSlicePath(double radius, double angle) {
     return Path()
       ..moveTo(0, 0)
@@ -16,19 +16,77 @@ class _CircleSlice extends StatelessWidget {
       ..close();
   }
 
+  static Path buildSlicePathPrevious(
+      double previuosRadius, double radius, double angle) {
+    return Path()
+      ..moveTo(previuosRadius, previuosRadius)
+      ..lineTo(radius, 0)
+      ..arcTo(
+          Rect.fromCircle(
+            center: Offset(0, 0),
+            radius: radius,
+          ),
+          0,
+          angle,
+          false)
+      ..close();
+  }
+
+  static Path buildValuePathPrevious(double radius, double angle) {
+    return Path()
+      ..moveTo(0, 0)
+      ..lineTo(radius * 9, 0)
+      ..arcTo(
+          Rect.fromCircle(
+            center: Offset(0, 0),
+            radius: radius,
+          ),
+          0,
+          angle,
+          false)
+      ..close();
+  }
+
+  static Path buildSlicePathOffset(double radius, double angle, Offset offset) {
+    return Path()
+      ..arcTo(
+          Rect.fromCircle(
+            center: offset,
+            radius: radius,
+          ),
+          0,
+          angle,
+          false)
+      ..close();
+  }
+
   final double radius;
   final double angle;
   final Color fillColor;
+  final Color softColor;
+  final Color lightColor;
   final Color strokeColor;
   final double strokeWidth;
+  final int value;
+  final int itemIndex;
+  final int itemCount;
+  final int selectedItemIndex;
+  final String valueText;
 
-  const _CircleSlice({
+  const CircleSlice({
     Key? key,
     required this.radius,
     required this.fillColor,
     required this.strokeColor,
+    this.softColor = Colors.transparent,
+    this.lightColor = Colors.transparent,
     this.strokeWidth = 1,
     required this.angle,
+    required this.itemIndex,
+    required this.itemCount,
+    required this.selectedItemIndex,
+    this.value = 0,
+    this.valueText = '',
   })  : assert(radius > 0),
         super(key: key);
 
@@ -38,20 +96,27 @@ class _CircleSlice extends StatelessWidget {
       width: radius,
       height: radius,
       child: CustomPaint(
-        painter: _CircleSlicePainter(
-          angle: angle,
-          fillColor: fillColor,
-          strokeColor: strokeColor,
-          strokeWidth: strokeWidth,
-        ),
-      ),
+          painter: _CircleSlicePainterWithValue(
+        fillColor: fillColor,
+        softColor: softColor,
+        angle: angle,
+        value: value,
+        lightColor: lightColor,
+        strokeColor: strokeColor,
+        strokeWidth: strokeWidth,
+        radius: radius,
+        itemIndex: itemIndex,
+        itemCount: itemCount,
+        selectedItemIndex: selectedItemIndex,
+        valueText: valueText,
+      )),
     );
   }
 }
 
 class _CircleSliceLayout extends StatelessWidget {
   final Widget? child;
-  final _CircleSlice slice;
+  final CircleSlice slice;
   final GestureHandler? handler;
 
   const _CircleSliceLayout({
@@ -126,7 +191,7 @@ class _CircleSliceLayout extends StatelessWidget {
                 LayoutId(
                   id: _SliceSlot.child,
                   child: Transform.rotate(
-                    angle: slice.angle / 2,
+                    angle: slice.angle,
                     child: child,
                   ),
                 ),

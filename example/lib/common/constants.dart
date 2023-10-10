@@ -1,12 +1,10 @@
-class Constants {
-  static List<String> get fortuneValues => const <String>[
-    'Grogu',
-    'Mace Windu',
-    'Obi-Wan Kenobi',
-    'Han Solo',
-    'Luke Skywalker',
-    'Darth Vader',
-    'Yoda',
-    'Ahsoka Tano',
-  ];
-}
+List<String> get fortuneValues => const <String>[
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+    ];

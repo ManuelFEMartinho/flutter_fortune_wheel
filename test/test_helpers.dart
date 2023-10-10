@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:flutter_fortune_wheel/flutter_pie_wheel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future pumpFortuneWidget(WidgetTester tester, FortuneWidget widget) async {
+Future pumpFortuneWidget(WidgetTester tester, PieSelector widget) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
@@ -12,7 +12,7 @@ Future pumpFortuneWidget(WidgetTester tester, FortuneWidget widget) async {
   );
 }
 
-const List<FortuneItem> testItems = <FortuneItem>[
-  FortuneItem(child: Text('1')),
-  FortuneItem(child: Text('2')),
+const List<PieItem> testItems = <PieItem>[
+  PieItem(child: Text('1')),
+  PieItem(child: Text('2')),
 ];

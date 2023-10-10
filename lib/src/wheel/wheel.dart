@@ -1,5 +1,4 @@
 import 'dart:math' as _math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,7 +7,7 @@ import '../core/core.dart';
 import '../indicators/indicators.dart';
 import '../util.dart';
 
-part 'fortune_wheel.dart';
+part 'pie_wheel.dart';
 
 part 'slice.dart';
 

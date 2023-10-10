@@ -1,27 +1,27 @@
 part of 'core.dart';
 
-/// Represents the style of a single [FortuneItem].
+/// Represents the style of a single [PieItem].
 ///
 /// See also:
-///  * [StyleStrategy], which allows for styling a list of [FortuneItem]s
+///  * [StyleStrategy], which allows for styling a list of [PieItem]s
 @immutable
-class FortuneItemStyle {
-  /// The color used for filling the background of a [FortuneItem].
+class PieItemStyle {
+  /// The color used for filling the background of a [PieItem].
   final Color color;
 
-  /// The color used for painting the border of a [FortuneItem].
+  /// The color used for painting the border of a [PieItem].
   final Color borderColor;
 
-  /// The border width of a [FortuneItem].
+  /// The border width of a [PieItem].
   final double borderWidth;
 
-  /// The alignment of text within a [FortuneItem]
+  /// The alignment of text within a [PieItem]
   final TextAlign textAlign;
 
-  /// The text style to use within a [FortuneItem]
+  /// The text style to use within a [PieItem]
   final TextStyle textStyle;
 
-  const FortuneItemStyle({
+  const PieItemStyle({
     this.color = Colors.white,
     this.borderColor = Colors.black,
     this.borderWidth = 1.0,
@@ -30,7 +30,7 @@ class FortuneItemStyle {
   });
 
   /// Creates an opinionated disabled style based on the current [ThemeData].
-  FortuneItemStyle.disabled(ThemeData theme, {double opacity = 0.0})
+  PieItemStyle.disabled(ThemeData theme, {double opacity = 0.0})
       : this(
           color: Color.alphaBlend(
             theme.disabledColor.withOpacity(opacity),
@@ -51,7 +51,7 @@ class FortuneItemStyle {
 
   @override
   bool operator ==(Object other) {
-    return other is FortuneItemStyle &&
+    return other is PieItemStyle &&
         borderColor == other.borderColor &&
         borderWidth == other.borderWidth &&
         color == other.color &&
@@ -60,13 +60,13 @@ class FortuneItemStyle {
   }
 }
 
-/// Interface for providing common styling to a list of [FortuneItem]s.
+/// Interface for providing common styling to a list of [PieItem]s.
 abstract class StyleStrategy {
   /// {@template flutter_fortune_wheel.StyleStrategy.getItemStyle}
-  /// Creates an [FortuneItemStyle] based on the passed [theme] while
+  /// Creates an [PieItemStyle] based on the passed [theme] while
   /// considering an item's [index] with respect to the overall [itemCount].
   /// {@endtemplate}
-  FortuneItemStyle getItemStyle(
+  PieItemStyle getItemStyle(
     ThemeData theme,
     int index,
     int itemCount,
@@ -81,14 +81,14 @@ mixin DisableAwareStyleStrategy {
     return disabledIndices.contains(index);
   }
 
-  FortuneItemStyle getDisabledItemStyle(
+  PieItemStyle getDisabledItemStyle(
     ThemeData theme,
     int index,
     int itemCount,
-    FortuneItemStyle Function() orElse,
+    PieItemStyle Function() orElse,
   ) {
     if (_isIndexDisabled(index)) {
-      return FortuneItemStyle.disabled(
+      return PieItemStyle.disabled(
         theme,
         opacity: index % 2 == 0 ? 0.2 : 0.0,
       );
@@ -124,12 +124,12 @@ class UniformStyleStrategy
 
   /// {@macro flutter_fortune_wheel.StyleStrategy.getItemStyle}
   @override
-  FortuneItemStyle getItemStyle(ThemeData theme, int index, int itemCount) {
+  PieItemStyle getItemStyle(ThemeData theme, int index, int itemCount) {
     return getDisabledItemStyle(
       theme,
       index,
       itemCount,
-      () => FortuneItemStyle(
+      () => PieItemStyle(
         color: color ??
             Color.alphaBlend(
               theme.colorScheme.primary.withOpacity(0.3),
@@ -176,12 +176,12 @@ class AlternatingStyleStrategy
 
   /// {@macro flutter_fortune_wheel.StyleStrategy.getItemStyle}
   @override
-  FortuneItemStyle getItemStyle(ThemeData theme, int index, int itemCount) {
+  PieItemStyle getItemStyle(ThemeData theme, int index, int itemCount) {
     return getDisabledItemStyle(
       theme,
       index,
       itemCount,
-      () => FortuneItemStyle(
+      () => PieItemStyle(
         color: _getFillColor(theme, index, itemCount),
         borderColor: theme.colorScheme.primary,
         borderWidth: 0.0,
