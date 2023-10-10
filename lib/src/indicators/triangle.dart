@@ -32,6 +32,8 @@ class _TrianglePainter extends CustomPainter {
     final beta = (_math.pi - alpha) / 2;
     startAngle = beta;
     final endAngle = alpha;
+
+    final bgColor = value != 0 ? lightColor : softColor;
     canvas.drawArc(
       Rect.fromCenter(
         center: Offset(size.width / 2, 10),
@@ -42,7 +44,7 @@ class _TrianglePainter extends CustomPainter {
       endAngle,
       true,
       Paint()
-        ..color = softColor!
+        ..color = bgColor!
         ..style = PaintingStyle.fill
         ..strokeWidth = 0.6,
     );
@@ -100,11 +102,21 @@ class _TrianglePainter extends CustomPainter {
     );
 
     final valueStr = selectedValue != 0 ? '$selectedValue' : text;
+    final textHasTwoOrMoreLines = valueStr.contains('\n');
+
     final isText = valueStr == text;
     final textPainter = TextPainter(
       text: TextSpan(
         text: '$valueStr',
-        style: TextStyle(fontSize: isText ? 16 : 20, color: Colors.black),
+        style: TextStyle(
+          fontSize: isText
+              ? textHasTwoOrMoreLines
+                  ? 12
+                  : 16
+              : 20,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       textDirection: TextDirection.ltr,
     );
@@ -113,8 +125,7 @@ class _TrianglePainter extends CustomPainter {
     canvas.save();
 
     final rotateAngle = isText ? _math.pi / 2 : -_math.pi;
-    final centerHeight =
-        isText ? size.height - textPainter.size.width / 1.75 : size.height;
+    final centerHeight = isText ? size.height / 1.5 : size.height;
     final centerW =
         isText ? size.width / 2 + textPainter.size.height / 2 : size.width / 2;
     canvas.translate(centerW, centerHeight);

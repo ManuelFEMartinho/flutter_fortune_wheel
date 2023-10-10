@@ -36,12 +36,15 @@ class _CircleSlicePainterWithValue extends CustomPainter {
     //fill slice area
     // final radius = _math.min(size.width, size.height);
     final path = CircleSlice.buildSlicePath(radius, angle);
-
+    final bgColor =
+        value != null && value != 0 && itemIndex != selectedItemIndex
+            ? lightColor
+            : softColor;
     // fill slice area
     canvas.drawPath(
       path,
       Paint()
-        ..color = softColor
+        ..color = bgColor
         ..style = PaintingStyle.fill,
     );
 
@@ -124,12 +127,18 @@ class _CircleSlicePainterWithValue extends CustomPainter {
         minWidth: 0,
         maxWidth: size.width,
       );
+      final center = Offset(0, 0);
+      final angleToMove = angle / 2;
+      final distance = radius * 0.8;
+      final offset = center.translate(
+        distance * _math.cos(angleToMove),
+        distance * _math.sin(angleToMove),
+      );
 
-      final offset = Offset(size.height / 1.5, size.width / 4);
       canvas.save();
       final pivot = textPainter.size.center(offset);
       canvas.translate(pivot.dx, pivot.dy);
-      canvas.rotate(rotateAngle(angle, diffToSelected, itemCount));
+      canvas.rotate(rotateAngle(diffToSelected, itemCount));
       canvas.translate(-pivot.dx, -pivot.dy);
       textPainter.paint(canvas, offset);
       canvas.restore();
@@ -145,37 +154,10 @@ class _CircleSlicePainterWithValue extends CustomPainter {
   }
 }
 
-double rotateAngle(double angle, int positionIndex, int positionCount) {
+double rotateAngle(int positionIndex, int positionCount) {
   final anglePerPosition = 2 * _math.pi / positionCount;
   final positionAngle =
       anglePerPosition * positionIndex - (anglePerPosition / 2) - _math.pi / 2;
 
   return -positionAngle;
-}
-
-double rotateAngleText(double angle, int positionIndex, int positionCount) {
-  final anglePerPosition = 2 * _math.pi / positionCount;
-
-  if (positionIndex > positionCount / 2) {
-    return anglePerPosition - anglePerPosition / 2 + _math.pi;
-  }
-  return anglePerPosition - anglePerPosition / 2;
-}
-
-Offset positionText({
-  required int positionIndex,
-  required int positionCount,
-  required Size size,
-  required TextPainter textPainter,
-  bool twoLines = false,
-}) {
-  if (positionIndex > positionCount / 2) {
-    final offset = Offset(
-        size.width / 4, size.height / 2 - (textPainter.size.height * 2.8));
-
-    return textPainter.size.center(offset);
-  }
-  final offset = Offset(size.width / 2, textPainter.size.height * .8);
-
-  return textPainter.size.center(offset);
 }
