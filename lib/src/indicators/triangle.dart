@@ -112,11 +112,15 @@ class _TrianglePainter extends CustomPainter {
         style: TextStyle(
           fontSize: isText
               ? textHasTwoOrMoreLines
-                  ? 12
+                  ? 13.5
                   : 16
               : 20,
           color: Colors.black,
-          fontWeight: FontWeight.bold,
+          fontWeight: isText
+              ? textHasTwoOrMoreLines
+                  ? FontWeight.w800
+                  : FontWeight.bold
+              : FontWeight.bold,
         ),
       ),
       textDirection: TextDirection.ltr,
