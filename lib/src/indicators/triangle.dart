@@ -106,21 +106,23 @@ class _TrianglePainter extends CustomPainter {
     final textHasTwoOrMoreLines = valueStr.contains('\n');
 
     final isText = valueStr == text;
+    final fontSize = isText
+        ? textHasTwoOrMoreLines
+            ? 13.5
+            : 16.0
+        : 20.0;
+    final fontweight = isText
+        ? textHasTwoOrMoreLines
+            ? FontWeight.w800
+            : FontWeight.bold
+        : FontWeight.bold;
     final textPainter = TextPainter(
       text: TextSpan(
         text: '$valueStr',
         style: TextStyle(
-          fontSize: isText
-              ? textHasTwoOrMoreLines
-                  ? 13.5
-                  : 16
-              : 20,
+          fontSize: fontSize,
           color: Colors.black,
-          fontWeight: isText
-              ? textHasTwoOrMoreLines
-                  ? FontWeight.w800
-                  : FontWeight.bold
-              : FontWeight.bold,
+          fontWeight: fontweight,
         ),
       ),
       textDirection: TextDirection.ltr,
